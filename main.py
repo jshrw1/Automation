@@ -1,10 +1,14 @@
+# Packages
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import pandas
+
 # Obtain data URLs (needed as ONS urls are not always consistent) before cleaning.
 
-import requests
-import pandas as pd
-from bs4 import BeautifulSoup
-
-url = ['https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/gdpmonthlyestimateuktimeseriesdataset', 'https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/employmentbyindustryemp13']
+url = ['https://www.ons.gov.uk/economy/grossdomesticproductgdp/datasets/gdpmonthlyestimateuktimeseriesdataset',
+       'https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/averageweeklyearnings',
+       'https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/employmentbyindustryemp13']
 
 urls = []
 for x in range(len(url)):
@@ -15,12 +19,11 @@ for x in range(len(url)):
 
 match = [s for s in urls if ".xls" in s]
 
-url_gdp = 'https://www.ons.gov.uk' + match[0]
-url_emp = 'https://www.ons.gov.uk' + match[1]
-
-print(url_gdp)
-print(url_emp)
-
 # Download and save xls/xlsx files
-df_gdp = pd.read_excel(url_gdp)
-df_emp = pd.read_excel(url_emp)
+
+path = "C:/Users/Joshua Rawlings/Documents/PyCharmProjects/automation_risk"
+
+for x in match:
+    file = requests.get('https://www.ons.gov.uk' + x, verify=True)
+    ext = (x.split("/")[-1:])
+    open(path + '/' + ext[0], 'wb').write(file.content)
