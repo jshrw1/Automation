@@ -21,9 +21,16 @@ match = [s for s in urls if ".xls" in s]
 
 # Download and save xls/xlsx files
 
-path = "C:/Users/Joshua Rawlings/Documents/PyCharmProjects/automation_risk"
+path = "/Users/joshuarawlings/PycharmProjects/Automation/"
 
 for x in match:
     file = requests.get('https://www.ons.gov.uk' + x, verify=True)
     ext = (x.split("/")[-1:])
     open(path + '/' + ext[0], 'wb').write(file.content)
+
+# Try find a solution that doesn't download the files. instead just gets the latest data ready for processing.
+
+# Process employment data
+employment = "/Users/joshuarawlings/PycharmProjects/Automation/emp13aug2022.xls"
+emp = pandas.read_excel(employment, sheet_name = "People", header=6, index_col=0)
+emp = emp.apply(pd.to_numeric, errors='coerce').loc[:, ~emp.columns.str.contains('^Unnamed')].dropna().round(decimals=0)
